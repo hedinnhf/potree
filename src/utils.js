@@ -316,6 +316,7 @@ export class Utils {
 					}, function progress (xhr) {
 						// console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
 					}, function error (xhr) {
+						console.log(urls[i]);
 						console.log('An error happened', xhr);
 					}
 				);

@@ -1,10 +1,7 @@
+import path from "path";
+import fs from "fs";
 
-const path = require('path');
-const fs = require("fs");
-const fsp = fs.promises;
-
-
-function createIconsPage(){
+export function createIconsPage(){
 	let iconsPath = "resources/icons";
 
 	fs.readdir(iconsPath, function(err, items) {
@@ -63,8 +60,3 @@ function createIconsPage(){
 
 	});
 }
-
-
-
-
-exports.createIconsPage = createIconsPage;

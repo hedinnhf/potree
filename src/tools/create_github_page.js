@@ -1,8 +1,6 @@
-
-const path = require('path');
-const fs = require("fs");
+import fs from "fs";
+import JSON5 from "json5"
 const fsp = fs.promises;
-const JSON5 = require('json5');
 
 function toCode(files, data){
 
@@ -80,7 +78,7 @@ function toCode(files, data){
 }
 
 
-async function createGithubPage(){
+export async function createGithubPage(){
 	const content = await fsp.readFile("./examples/page.json", 'utf8');
 	const settings = JSON5.parse(content);
 
@@ -127,8 +125,3 @@ async function createGithubPage(){
 		}
 	});
 }
-
-
-
-
-exports.createGithubPage = createGithubPage;
