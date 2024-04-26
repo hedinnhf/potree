@@ -128,7 +128,7 @@ let resourcePath = scriptPath + '/resources';
 export {scriptPath, resourcePath};
 
 
-export function loadPointCloud(path, name, callback){
+export function loadPointCloud(metadataPath, hierarchyPath, octreePath, name, callback){
 	let loaded = function(e){
 		e.pointcloud.name = name;
 		callback(e);
@@ -137,45 +137,45 @@ export function loadPointCloud(path, name, callback){
 	let promise = new Promise( resolve => {
 
 		// load pointcloud
-		if (!path){
+		if (!metadataPath){
 			// TODO: callback? comment? Hello? Bueller? Anyone?
-		} else if (path.includes('ept.json')) {
-			EptLoader.load(path, function(geometry) {
+		} else if (metadataPath.includes('ept.json')) {
+			EptLoader.load(metadataPath, function(geometry) {
 				if (!geometry) {
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				}
 				else {
 					let pointcloud = new PointCloudOctree(geometry);
 					resolve({type: 'pointcloud_loaded', pointcloud: pointcloud});
 				}
 			});
-		} else if (path.includes('.copc.laz')) {
-			CopcLoader.load(path, function(geometry) {
+		} else if (metadataPath.includes('.copc.laz')) {
+			CopcLoader.load(metadataPath, function(geometry) {
 				if (!geometry) {
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				}
 				else {
 					let pointcloud = new PointCloudOctree(geometry);
 					resolve({type: 'pointcloud_loaded', pointcloud: pointcloud});
 				}
 			});
-		} else if (path.indexOf('cloud.js') > 0) {
-			POCLoader.load(path, function (geometry) {
+		} else if (metadataPath.indexOf('cloud.js') > 0) {
+			POCLoader.load(metadataPath, function (geometry) {
 				if (!geometry) {
 					//callback({type: 'loading_failed'});
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				} else {
 					let pointcloud = new PointCloudOctree(geometry);
 					// loaded(pointcloud);
 					resolve({type: 'pointcloud_loaded', pointcloud: pointcloud});
 				}
 			});
-		} else if (path.indexOf('metadata.json') > 0) {
-			Potree.OctreeLoader.load(path).then(e => {
+		} else if (metadataPath.indexOf('metadata.json') > 0) {
+			Potree.OctreeLoader.load(metadataPath, hierarchyPath, octreePath).then(e => {
 				let geometry = e.geometry;
 
 				if(!geometry){
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				}else{
 					let pointcloud = new PointCloudOctree(geometry);
 
@@ -192,21 +192,21 @@ export function loadPointCloud(path, name, callback){
 				}
 			});
 
-			OctreeLoader.load(path, function (geometry) {
+			OctreeLoader.load(metadataPath, hierarchyPath, octreePath, function (geometry) {
 				if (!geometry) {
 					//callback({type: 'loading_failed'});
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				} else {
 					let pointcloud = new PointCloudOctree(geometry);
 					// loaded(pointcloud);
 					resolve({type: 'pointcloud_loaded', pointcloud: pointcloud});
 				}
 			});
-		} else if (path.indexOf('.vpc') > 0) {
-			PointCloudArena4DGeometry.load(path, function (geometry) {
+		} else if (metadataPath.indexOf('.vpc') > 0) {
+			PointCloudArena4DGeometry.load(metadataPath, function (geometry) {
 				if (!geometry) {
 					//callback({type: 'loading_failed'});
-					console.error(new Error(`failed to load point cloud from URL: ${path}`));
+					console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 				} else {
 					let pointcloud = new PointCloudArena4D(geometry);
 					// loaded(pointcloud);
@@ -215,7 +215,7 @@ export function loadPointCloud(path, name, callback){
 			});
 		} else {
 			//callback({'type': 'loading_failed'});
-			console.error(new Error(`failed to load point cloud from URL: ${path}`));
+			console.error(new Error(`failed to load point cloud from URL: ${metadataPath}`));
 		}
 	});
 
